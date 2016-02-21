@@ -65,8 +65,12 @@ sub create_acme_cpanlists_import_modules {
 
     my $now = time();
 
+    my %names;
     for my $mod (@$modules) {
         $log->infof("Processing %s ...", $mod->{name});
+
+        return [409, "Duplicate module name '$mod->{name}'"]
+            if $names{$mod->{name}}++;
 
         my $cache_path = "$dist_dir/devdata/$mod->{name}.html";
         my @st_cache = stat $cache_path;
