@@ -88,6 +88,9 @@ sub create_acme_cpanlists_import_modules {
         my $mods = HTML::Extract::CPANModules::extract_cpan_modules_from_html(
             html => $content, %{ $mod->{extract_opts} // {}});
 
+        $log->debugf("Extracted module names: %s", $mods);
+        return [412, "No module names found for $mod->{name}"] unless @$mods;
+
         my $module_path = "$dist_dir/lib/$namespace_pm/$mod->{name}.pm";
 
         my $mod_list = {
