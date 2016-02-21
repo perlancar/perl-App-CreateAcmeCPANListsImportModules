@@ -1,5 +1,12 @@
 Revision history for App-CreateAcmeCPANListsImportModules
 
+0.03    2016-02-21 (PERLANCAR)
+
+	- Check for duplicate module name.
+
+	- Abort when no module names are found in HTML.
+
+
 0.02    2016-02-21 (PERLANCAR)
 
 	- Allow adding notes.
