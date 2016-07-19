@@ -8,6 +8,7 @@ use strict;
 use warnings;
 
 use Log::Any::IfLOG '$log';
+use Perinci::Sub::Util qw(err);
 
 our %SPEC;
 
@@ -41,6 +42,18 @@ _
         },
         dist_dir => {
             schema => 'str*',
+        },
+        exclude_unindexed => {
+            summary => 'Consult local CPAN index and exclude module entries '.
+                'that are not indexed on CPAN',
+            schema => 'bool',
+            default => 1,
+            description => <<'_',
+
+This requires `App::lcpan` to be installed and a local CPAN index to exist and
+be fairly recent.
+
+_
         },
     },
 };
@@ -93,6 +106,30 @@ sub create_acme_cpanlists_import_modules {
             html => $content, %{ $mod->{extract_opts} // {}});
 
         $log->debugf("Extracted module names: %s", $mods);
+
+        if ($args{exclude_unindexed} && @$mods) {
+            require App::lcpan::Call;
+            my $lcpan_res = App::lcpan::Call::call_lcpan_script(
+                argv => [qw/mods -x --or/, @$mods],
+            );
+            return err("Can't list modules in lcpan", $lcpan_res)
+                unless $lcpan_res->[0] == 200;
+            my @excluded_mods;
+            my @included_mods;
+            for my $mod (@$mods) {
+                if (grep { $mod eq $_ } @{$lcpan_res->[2]}) {
+                    push @included_mods, $mod;
+                } else {
+                    push @excluded_mods, $mod;
+                }
+            }
+            $mods = \@included_mods;
+            if (@excluded_mods) {
+                $log->debugf("Excluded module names (not indexed on ".
+                                 "local CPAN mirror): %s", \@excluded_mods);
+            }
+        }
+
         return [412, "No module names found for $mod->{name}"] unless @$mods;
 
         my $module_path = "$dist_dir/lib/$namespace_pm/$mod->{name}.pm";
