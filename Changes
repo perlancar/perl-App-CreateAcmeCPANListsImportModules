@@ -1,5 +1,12 @@
 Revision history for App-CreateAcmeCPANListsImportModules
 
+0.04    2016-07-19 (PERLANCAR)
+
+	- Add option: excluded_unindexed (default on) to exclude module
+	  entries that are not indexed on local CPAN index to avoid false
+	  positive entries.
+
+
 0.03    2016-02-21 (PERLANCAR)
 
 	- Check for duplicate module name.
