@@ -144,11 +144,14 @@ sub create_acme_cpanlists_import_modules {
                 }
             }
             $mods = \@included_mods;
+
             if (@excluded_mods) {
                 $log->debugf("Excluded module names (not indexed on ".
                                  "local CPAN mirror): %s", \@excluded_mods);
             }
         }
+
+        push @$mods, @{$ac_mod->{add_modules}} if $ac_mod->{add_modules};
 
         return [412, "No module names found for $ac_mod->{name}"] unless @$mods;
 
