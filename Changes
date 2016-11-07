@@ -1,5 +1,12 @@
 Revision history for App-CreateAcmeCPANListsImportModules
 
+0.05    2016-11-07 (PERLANCAR)
+
+	- Allow adding module entries manually via add_modules.
+
+	- Allow extracting from multiple URL's via extract_urls.
+
+
 0.04    2016-07-19 (PERLANCAR)
 
 	- Add option: excluded_unindexed (default on) to exclude module
