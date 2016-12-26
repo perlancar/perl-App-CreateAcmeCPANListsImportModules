@@ -80,7 +80,8 @@ sub create_acme_cpanlists_import_modules {
     my $namespace_pm = $namespace; $namespace_pm =~ s!::!/!g;
 
     my $ua = LWP::UserAgent->new;
-    $ua->agent($args{user_agent}) if $args{user_agent};
+    my $user_agent_str = $args{user_agent} // $ENV{HTTP_USER_AGENT};
+    $ua->agent($user_agent_str) if $user_agent_str;
 
     my $now = time();
 
@@ -190,6 +191,13 @@ sub create_acme_cpanlists_import_modules {
 
 1;
 # ABSTRACT:
+
+=head1 ENVIRONMENT
+
+=head2 HTTP_USER_AGENT => str
+
+Set default for C<user_agent> argument.
+
 
 =head1 SEE ALSO
 
