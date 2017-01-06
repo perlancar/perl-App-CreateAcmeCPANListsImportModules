@@ -107,7 +107,7 @@ sub create_acme_cpanlists_import_modules {
             my $content;
             if (!$cache || !@st_cache || $st_cache[9] < $now-30*86400) {
                 $log->infof("Retrieving %s ...", $url);
-                my $resp = $ua->get($url);
+                my $resp = $ua->get($url, "Cache-Control" => "no-cache");
                 $resp->is_success
                     or return [500, "Can't get $url: ".$resp->status_line];
                 $content = $resp->content;
