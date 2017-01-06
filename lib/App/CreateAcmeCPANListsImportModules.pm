@@ -156,7 +156,7 @@ sub create_acme_cpanlists_import_modules {
 
         return [412, "No module names found for $ac_mod->{name}"] unless @$mods;
 
-        my $ac_module_path = "$dist_dir/lib/$namespace_pm/$ac_mod->{name}.pm";
+        (my $ac_module_path = "$dist_dir/lib/$namespace_pm/$ac_mod->{name}.pm") =~ s!::!/!g;
 
         my $mod_list = {
             summary => $ac_mod->{summary},
@@ -164,8 +164,10 @@ sub create_acme_cpanlists_import_modules {
             entries => [map {+{module=>$_}} @$mods],
         };
 
+        (my $ac_mod_name = $ac_mod->{name}) =~ s!/!::!g;
+
         my @pm_content = (
-            "package $namespace\::$ac_mod->{name};\n",
+            "package $namespace\::$ac_mod_name;\n",
             "\n",
             "# DATE\n",
             "# VERSION\n",
