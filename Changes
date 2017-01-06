@@ -1,5 +1,15 @@
 Revision history for App-CreateAcmeCPANListsImportModules
 
+0.06    2017-01-06 (PERLANCAR)
+
+	- Allow 'Foo/Bar' or 'Foo::Bar' in module name.
+
+	- Add 'Cache-Control: no-cache' header to get() request to avoid
+	  getting cached compressed data.
+
+	- Observe HTTP_USER_AGENT.
+
+
 0.05    2016-11-07 (PERLANCAR)
 
 	- Allow adding module entries manually via add_modules.
