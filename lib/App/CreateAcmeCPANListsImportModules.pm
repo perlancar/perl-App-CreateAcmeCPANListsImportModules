@@ -65,6 +65,10 @@ _
             summary => 'Module names that should be replaced by their fixed spellings',
             schema => 'hash*',
         },
+        ignore_empty => {
+            summary => 'If set to true, will not create if there are no extracte module names found',
+            schema => 'bool',
+        },
     },
 };
 sub create_acme_cpanlists_import_modules {
@@ -162,7 +166,13 @@ sub create_acme_cpanlists_import_modules {
 
         push @$mods, @{$ac_mod->{add_modules}} if $ac_mod->{add_modules};
 
-        return [412, "No module names found for $ac_mod->{name}"] unless @$mods;
+        unless (@$mods) {
+            if ($args{ignore_empty}) {
+                return [304, "No module names found for $ac_mod->{name}"];
+            } else {
+                return [412, "No module names found for $ac_mod->{name}"];
+            }
+        }
 
         (my $ac_module_path = "$dist_dir/lib/$namespace_pm/$ac_mod->{name}.pm") =~ s!::!/!g;
 
