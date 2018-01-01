@@ -94,6 +94,7 @@ sub create_acme_cpanlists_import_modules {
     my $now = time();
 
     my %names;
+  AC_MOD:
     for my $ac_mod (@$ac_modules) {
         log_info("Processing %s ...", $ac_mod->{name});
 
@@ -168,7 +169,8 @@ sub create_acme_cpanlists_import_modules {
 
         unless (@$mods) {
             if ($args{ignore_empty}) {
-                return [304, "No module names found for $ac_mod->{name}"];
+                log_info("No module names found for $ac_mod->{name}, skipped");
+                next AC_MOD;
             } else {
                 return [412, "No module names found for $ac_mod->{name}"];
             }
