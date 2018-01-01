@@ -61,6 +61,10 @@ be fairly recent.
 
 _
         },
+        typos => {
+            summary => 'Module names that should be replaced by their fixed spellings',
+            schema => 'hash*',
+        },
     },
 };
 sub create_acme_cpanlists_import_modules {
@@ -124,6 +128,10 @@ sub create_acme_cpanlists_import_modules {
 
             log_debug("Extracted module names: %s", $mods0);
             for my $m (@$mods0) {
+                if ($args{typos} && $args{typos}{$m}) {
+                    log_info("Replacing typo %s with fixed spelling %s", $m, $args{typos}{$m});
+                    $m = $args{typos}{$m};
+                }
                 push @$mods, $m unless grep { $m eq $_ } @$mods;
             }
         } # for each extract url
